@@ -17,14 +17,21 @@ import "sweetalert2/dist/sweetalert2.css";
 
 const ResetPasswordForm = ({ backgroundColor, color }) => {
   const [email, setEmail] = useState("");
-  const [error, setError] = useState(null);
-  const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       // Send a request to the server to reset the password
@@ -59,13 +66,56 @@ const ResetPasswordForm = ({ backgroundColor, color }) => {
     setShowPassword(!showPassword);
   };
 
+  const validateForm = () => {
+    let isValid = true;
+
+    if (email.trim() === "") {
+      setEmailError("Email is required");
+      isValid = false;
+    } else if (!isValidEmail(email)) {
+      setEmailError("Invalid email format");
+      isValid = false;
+    } else {
+      setEmailError("");
+    }
+
+    if (password.trim() === "") {
+      setPasswordError("Password is required");
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long");
+      isValid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    if (confirmPassword.trim() === "") {
+      setConfirmPasswordError("Confirm Password is required");
+      isValid = false;
+    } else if (password !== confirmPassword) {
+      setConfirmPasswordError("Passwords do not match");
+      isValid = false;
+    } else {
+      setConfirmPasswordError("");
+    }
+
+    return isValid;
+  };
+
+  const isValidEmail = (email) => {
+    // Simple email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   return (
     <Container maxWidth="sm" sx={{ mt: 10 }}>
       <Typography
         variant="h4"
         gutterBottom
         align="center"
-        fontFamily="Courgette, cursive">
+        fontFamily="Courgette, cursive"
+      >
         Reset Password
       </Typography>
       <Grid container component="form" onSubmit={handleSubmit} spacing={2}>
@@ -75,10 +125,9 @@ const ResetPasswordForm = ({ backgroundColor, color }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             fullWidth
-            color={email.length <= 0 || error ? "error" : "success"}
+            error={emailError !== ""}
+            helperText={emailError}
             variant="outlined"
-            helperText={error ? "Invalid email" : null}
-            error={error !== null}
           />
         </Grid>
         <Grid item xs={12}>
@@ -88,10 +137,9 @@ const ResetPasswordForm = ({ backgroundColor, color }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
-            color={password.length <= 0 || error ? "error" : "success"}
+            error={passwordError !== ""}
+            helperText={passwordError}
             variant="outlined"
-            helperText={error ? "Invalid password" : null}
-            error={error !== null}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -110,10 +158,9 @@ const ResetPasswordForm = ({ backgroundColor, color }) => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             fullWidth
-            color={confirmPassword.length <= 0 || error ? "error" : "success"}
+            error={confirmPasswordError !== ""}
+            helperText={confirmPasswordError}
             variant="outlined"
-            helperText={error ? "Passwords do not match" : null}
-            error={error !== null}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -130,7 +177,8 @@ const ResetPasswordForm = ({ backgroundColor, color }) => {
             type="submit"
             variant="contained"
             fullWidth
-            style={{ backgroundColor, color }}>
+            style={{ backgroundColor, color }}
+          >
             Reset Password
           </Button>
         </Grid>
@@ -140,7 +188,8 @@ const ResetPasswordForm = ({ backgroundColor, color }) => {
             fullWidth
             component={Link}
             to="/login"
-            style={{ color: backgroundColor }}>
+            style={{ color: backgroundColor }}
+          >
             Back to Login
           </Button>
         </Grid>

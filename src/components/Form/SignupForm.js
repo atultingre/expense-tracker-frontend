@@ -1,6 +1,5 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import Swal from "sweetalert2";
 import {
   Button,
   Container,
@@ -12,15 +11,25 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { BASE_URL } from "../../api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.css";
 
 const SignupForm = ({ onSignup, backgroundColor, color }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     try {
       await axios.post(`${BASE_URL}/api/register`, {
@@ -41,7 +50,7 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
         Swal.fire({
           icon: "error",
           title: "Registration Error",
-          text: "email already exists",
+          text: "Email already exists",
         });
       } else {
         Swal.fire({
@@ -57,13 +66,46 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
     setShowPassword(!showPassword);
   };
 
+  const validateForm = () => {
+    let isValid = true;
+
+    if (email.trim() === "") {
+      setEmailError("Email is required");
+      isValid = false;
+    } else if (!isValidEmail(email)) {
+      setEmailError("Invalid email format");
+      isValid = false;
+    } else {
+      setEmailError("");
+    }
+
+    if (password.trim() === "") {
+      setPasswordError("Password is required");
+      isValid = false;
+    } else if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long");
+      isValid = false;
+    } else {
+      setPasswordError("");
+    }
+
+    return isValid;
+  };
+
+  const isValidEmail = (email) => {
+    // Simple email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   return (
     <Container maxWidth="sm" sx={{ mt: 10, mb: 5 }}>
       <Typography
         variant="h4"
         gutterBottom
         align="center"
-        fontFamily="Courgette, cursive">
+        fontFamily="Courgette, cursive"
+      >
         Signup
       </Typography>
       <Grid container component="form" onSubmit={handleSubmit} spacing={2}>
@@ -75,7 +117,8 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            color={email.length <= 0 ? "error" : "success"}
+            error={emailError !== ""}
+            helperText={emailError}
             fullWidth
           />
         </Grid>
@@ -87,7 +130,8 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            color={password.length <= 0 ? "error" : "success"}
+            error={passwordError !== ""}
+            helperText={passwordError}
             fullWidth
             InputProps={{
               endAdornment: (
@@ -105,7 +149,8 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
             type="submit"
             variant="contained"
             style={{ backgroundColor: backgroundColor, color: color }}
-            fullWidth>
+            fullWidth
+          >
             Signup
           </Button>
         </Grid>
@@ -115,7 +160,8 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
             fullWidth
             component={Link}
             to="/login"
-            style={{ color: backgroundColor }}>
+            style={{ color: backgroundColor }}
+          >
             Login
           </Button>
         </Grid>

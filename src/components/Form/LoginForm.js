@@ -16,23 +16,55 @@ import { Link } from "react-router-dom";
 const LoginForm = ({ onLogin, backgroundColor, color }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null); // Define the 'error' variable
-  const [showPassword, setShowPassword] = useState(false); // Define the 'showPassword' variable
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const validateEmail = () => {
+    if (!email) {
+      setEmailError("Email is required");
+    } else if (!isValidEmail(email)) {
+      setEmailError("Invalid email address");
+    } else {
+      setEmailError("");
+    }
+  };
+
+  const validatePassword = () => {
+    if (!password) {
+      setPasswordError("Password is required");
+    } else {
+      setPasswordError("");
+    }
+  };
+
+  const isValidEmail = (email) => {
+    // Use a regular expression or any other validation logic to validate the email format
+    // This is a simple example of email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    try {
-      const response = await axios.post(`${BASE_URL}/api/login`, {
-        email,
-        password,
-      });
+    validateEmail();
+    validatePassword();
 
-      const token = response.data.token;
-      onLogin(token);
-    } catch (error) {
-      console.error("Error logging in:", error);
-      setError(error); // Update the 'error' value
+    if (!emailError && !passwordError) {
+      try {
+        const response = await axios.post(`${BASE_URL}/api/login`, {
+          email,
+          password,
+        });
+
+        const token = response.data.token;
+        onLogin(token);
+      } catch (error) {
+        console.error("Error logging in:", error);
+        setError(error);
+      }
     }
   };
 
@@ -46,7 +78,8 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
         variant="h4"
         gutterBottom
         align="center"
-        fontFamily="Courgette, cursive">
+        fontFamily="Courgette, cursive"
+      >
         Login
       </Typography>
       <Grid container component="form" onSubmit={handleSubmit} spacing={2}>
@@ -55,26 +88,25 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
             label="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onBlur={validateEmail}
             fullWidth
-            color={email.length <= 0 || error ? "error" : "success"}
+            error={Boolean(emailError || error)}
+            helperText={emailError || (error && "Invalid email")}
             variant="outlined"
-            helperText={error ? "Invalid email" : null}
-            error={error !== null}
           />
         </Grid>
         <Grid item xs={12}>
           <TextField
             label="Password"
-            type={showPassword ? "text" : "password"} // Toggle password visibility
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onBlur={validatePassword}
             fullWidth
-            color={password.length <= 0 || error ? "error" : "success"}
+            error={Boolean(passwordError || error)}
+            helperText={passwordError || (error && "Invalid password")}
             variant="outlined"
-            helperText={error ? "Invalid email or password" : null} // Show the error message as helper text
-            error={error !== null} // Set error prop to indicate an error
             InputProps={{
-              // Add the show/hide password toggle button
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={handleTogglePassword} edge="end">
@@ -90,9 +122,9 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
             variant="text"
             fullWidth
             component={Link}
-            // onClick={handleForgotPassword}
             to="/reset-password"
-            style={{ color: backgroundColor }}>
+            style={{ color: backgroundColor }}
+          >
             Forgot Password?
           </Button>
         </Grid>
@@ -101,7 +133,8 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
             type="submit"
             variant="contained"
             fullWidth
-            style={{ backgroundColor: backgroundColor, color: color }}>
+            style={{ backgroundColor, color }}
+          >
             Login
           </Button>
         </Grid>
@@ -111,7 +144,8 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
             fullWidth
             component={Link}
             to="/signup"
-            style={{ color: backgroundColor }}>
+            style={{ color: backgroundColor }}
+          >
             Signup
           </Button>
         </Grid>
