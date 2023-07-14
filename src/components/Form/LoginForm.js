@@ -10,14 +10,14 @@ import {
   Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { BASE_URL } from "../../api";
 
 const LoginForm = ({ onLogin, backgroundColor, color }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null); // Define the 'error' variable
   const [showPassword, setShowPassword] = useState(false); // Define the 'showPassword' variable
-  const BASE_URL = process.env.BASE_URL;
-  
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 

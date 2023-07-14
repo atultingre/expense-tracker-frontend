@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-const BASE_URL = process.env.BASE_URL;
+import { BASE_URL } from "../../api";
 
 const SignupForm = ({ onSignup, backgroundColor, color }) => {
   const [username, setUsername] = useState("");

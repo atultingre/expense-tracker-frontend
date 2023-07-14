@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { Box, Container } from "@mui/material";
-import ExpenseList from "./components/ExpenseList";
+import ExpenseList from "./components/Table/ExpenseList";
 import ExpenseForm from "./components/Form/ExpenseForm";
 import ExpenseFormEdit from "./components/Form/ExpenseFormEdit";
 import "./index.css";
@@ -13,7 +13,8 @@ import { colorCombinations } from "./components/colorData";
 import axios from "axios";
 import LoginForm from "./components/Form/LoginForm";
 import SignupForm from "./components/Form/SignupForm";
-const BASE_URL = process.env.BASE_URL
+import Layout from "./components/Layout/Layout";
+import { BASE_URL } from "./api";
 
 const App = () => {
   const [filterDate, setFilterDate] = useState("");
@@ -21,6 +22,7 @@ const App = () => {
   const [expenses, setExpenses] = useState([]);
   const [token, setToken] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Generate a random index
@@ -28,7 +30,6 @@ const App = () => {
     // Set the random color combination
     setColorCombination(colorCombinations[randomIndex]);
   }, []);
- 
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -43,26 +44,35 @@ const App = () => {
         console.error("Error fetching expenses:", error);
       }
     };
-  
+
     if (token) {
       fetchExpenses();
+    } else if (
+      location.pathname !== "/login" &&
+      location.pathname !== "/signup"
+    ) {
+      // If the user is not logged in and not on the login or signup page,
+      // navigate to the login page
+      navigate("/login");
     }
-  }, [token]);
-  
+  }, [token, navigate, location.pathname]);
 
   // Add Expenses
   const addExpense = async (expense) => {
     try {
-      const response = await axios.post(`${BASE_URL}/api/expenses`, {
-        title: expense.title,
-        amount: expense.amount,
-        date: expense.date,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const response = await axios.post(
+        `${BASE_URL}/api/expenses`,
+        {
+          title: expense.title,
+          amount: expense.amount,
+          date: expense.date,
         },
-      });
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setExpenses([...expenses, response.data]);
       Swal.fire({
         icon: "success",
@@ -78,17 +88,19 @@ const App = () => {
       });
     }
   };
-    
+
   // Update Expenses
   const updateExpense = async (id, updatedExpense) => {
     try {
-      const response = await axios.put(`${BASE_URL}/api/expenses/${id}`, updatedExpense,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
+      const response = await axios.put(
+        `${BASE_URL}/api/expenses/${id}`,
+        updatedExpense,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const updatedExpenses = expenses.map((expense) =>
         expense._id === id ? response.data : expense
       );
@@ -107,7 +119,7 @@ const App = () => {
       });
     }
   };
-  
+
   // Delete Expenses
   const deleteExpense = async (id) => {
     try {
@@ -119,14 +131,16 @@ const App = () => {
         cancelButtonText: "Cancel",
         reverseButtons: false,
       });
-  
+
       if (result.isConfirmed) {
-        await axios.delete(`${BASE_URL}/api/expenses/${id}`,{
+        await axios.delete(`${BASE_URL}/api/expenses/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        const updatedExpenses = expenses.filter((expense) => expense._id !== id);
+        const updatedExpenses = expenses.filter(
+          (expense) => expense._id !== id
+        );
         setExpenses(updatedExpenses);
         Swal.fire({
           icon: "success",
@@ -143,7 +157,7 @@ const App = () => {
       });
     }
   };
-  
+
   const handleLogin = (token) => {
     setToken(token);
     localStorage.setItem("token", token);
@@ -160,67 +174,88 @@ const App = () => {
     navigate("/login");
   };
 
-
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }} >
-      <Navbar setFilterDate={setFilterDate} expenses={expenses} backgroundColor={colorCombination.backgroundColor} color={colorCombination.color}  token={token}  setToken={setToken}/>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <Navbar
+        setFilterDate={setFilterDate}
+        expenses={expenses}
+        backgroundColor={colorCombination.backgroundColor}
+        color={colorCombination.color}
+        token={token}
+        setToken={setToken}
+      />
       <Container component="main" sx={{ flexGrow: 1, mt: 4, mb: 2 }}>
-      <Routes>
-        <Route
-          path="/login"
-          element={<LoginForm onLogin={handleLogin} backgroundColor={colorCombination.backgroundColor}
-                color={colorCombination.color}/>}
-        />
-        <Route
-          path="/signup"
-          element={<SignupForm onSignup={handleSignup} backgroundColor={colorCombination.backgroundColor}
-                color={colorCombination.color}/>}
-        />
-        {token && (
-          <Route
-            path="/add"
-            element={
-              <ExpenseForm
-                addExpense={addExpense}
-                backgroundColor={colorCombination.backgroundColor}
-                color={colorCombination.color}
+        <Routes>
+          <Route path="/" element={<Layout />}>
+            <Route
+              path="/login"
+              element={
+                <LoginForm
+                  onLogin={handleLogin}
+                  backgroundColor={colorCombination.backgroundColor}
+                  color={colorCombination.color}
+                />
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <SignupForm
+                  onSignup={handleSignup}
+                  backgroundColor={colorCombination.backgroundColor}
+                  color={colorCombination.color}
+                />
+              }
+            />
+            {token && (
+              <Route
+                path="/add"
+                element={
+                  <ExpenseForm
+                    addExpense={addExpense}
+                    backgroundColor={colorCombination.backgroundColor}
+                    color={colorCombination.color}
+                  />
+                }
               />
-            }
-          />
-        )}
-        {token && (
-          <Route
-            path="/"
-            exact
-            element={
-              <ExpenseList
-                expenses={expenses}
-                updateExpense={updateExpense}
-                deleteExpense={deleteExpense}
-                filterDate={filterDate}
-                setFilterDate={setFilterDate}
-                backgroundColor={colorCombination.backgroundColor}
-                color={colorCombination.color}
+            )}
+            {token && (
+              <Route
+                path="/"
+                exact
+                element={
+                  <ExpenseList
+                    expenses={expenses}
+                    updateExpense={updateExpense}
+                    deleteExpense={deleteExpense}
+                    filterDate={filterDate}
+                    setFilterDate={setFilterDate}
+                    backgroundColor={colorCombination.backgroundColor}
+                    color={colorCombination.color}
+                  />
+                }
               />
-            }
-          />
-        )}
-        {token && (
-          <Route
-            path="/edit/:_id"
-            element={
-              <ExpenseFormEdit
-                expenses={expenses}
-                updateExpense={updateExpense}
-                backgroundColor={colorCombination.backgroundColor}
-                color={colorCombination.color}
+            )}
+            {token && (
+              <Route
+                path="/edit/:_id"
+                element={
+                  <ExpenseFormEdit
+                    expenses={expenses}
+                    updateExpense={updateExpense}
+                    backgroundColor={colorCombination.backgroundColor}
+                    color={colorCombination.color}
+                  />
+                }
               />
-            }
-          />
-        )}
-      </Routes>
+            )}
+          </Route>
+        </Routes>
       </Container>
-      <Footer backgroundColor={colorCombination.backgroundColor} color={colorCombination.color}/>    
+      <Footer
+        backgroundColor={colorCombination.backgroundColor}
+        color={colorCombination.color}
+      />
     </Box>
   );
 };
