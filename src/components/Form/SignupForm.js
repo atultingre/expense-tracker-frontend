@@ -4,22 +4,25 @@ import Swal from "sweetalert2";
 import {
   Button,
   Container,
-  Grid,IconButton, InputAdornment,
+  Grid,
+  IconButton,
+  InputAdornment,
   TextField,
   Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+const BASE_URL = process.env.BASE_URL;
 
 const SignupForm = ({ onSignup, backgroundColor, color }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false); // Define the 'showPassword' variable
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      await axios.post("/api/register", {
+      await axios.post(`${BASE_URL}/api/register`, {
         username,
         password,
       });
@@ -59,8 +62,7 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
         variant="h4"
         gutterBottom
         align="center"
-        fontFamily="Courgette, cursive"
-      >
+        fontFamily="Courgette, cursive">
         Signup
       </Typography>
       <Grid container component="form" onSubmit={handleSubmit} spacing={2}>
@@ -79,7 +81,7 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
         <Grid item xs={12}>
           <TextField
             label="Password"
-            type={showPassword ? "text" : "password"} // Toggle password visibility
+            type={showPassword ? "text" : "password"}
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -87,7 +89,6 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
             color={password.length <= 0 ? "error" : "success"}
             fullWidth
             InputProps={{
-              // Add the show/hide password toggle button
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={handleTogglePassword} edge="end">
@@ -103,8 +104,7 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
             type="submit"
             variant="contained"
             style={{ backgroundColor: backgroundColor, color: color }}
-            fullWidth
-          >
+            fullWidth>
             Signup
           </Button>
         </Grid>

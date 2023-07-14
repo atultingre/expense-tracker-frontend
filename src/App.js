@@ -13,6 +13,7 @@ import { colorCombinations } from "./components/colorData";
 import axios from "axios";
 import LoginForm from "./components/Form/LoginForm";
 import SignupForm from "./components/Form/SignupForm";
+const BASE_URL = process.env.BASE_URL
 
 const App = () => {
   const [filterDate, setFilterDate] = useState("");
@@ -32,7 +33,7 @@ const App = () => {
   useEffect(() => {
     const fetchExpenses = async () => {
       try {
-        const response = await axios.get("/api/expenses", {
+        const response = await axios.get(`${BASE_URL}/api/expenses`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -52,7 +53,7 @@ const App = () => {
   // Add Expenses
   const addExpense = async (expense) => {
     try {
-      const response = await axios.post("/api/expenses", {
+      const response = await axios.post(`${BASE_URL}/api/expenses`, {
         title: expense.title,
         amount: expense.amount,
         date: expense.date,
@@ -81,7 +82,7 @@ const App = () => {
   // Update Expenses
   const updateExpense = async (id, updatedExpense) => {
     try {
-      const response = await axios.put(`/api/expenses/${id}`, updatedExpense,
+      const response = await axios.put(`${BASE_URL}/api/expenses/${id}`, updatedExpense,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -120,7 +121,7 @@ const App = () => {
       });
   
       if (result.isConfirmed) {
-        await axios.delete(`/api/expenses/${id}`,{
+        await axios.delete(`${BASE_URL}/api/expenses/${id}`,{
           headers: {
             Authorization: `Bearer ${token}`,
           },

@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Button, Container, Grid, IconButton, InputAdornment, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  Container,
+  Grid,
+  IconButton,
+  InputAdornment,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const LoginForm = ({ onLogin, backgroundColor, color }) => {
@@ -8,12 +16,13 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null); // Define the 'error' variable
   const [showPassword, setShowPassword] = useState(false); // Define the 'showPassword' variable
-
+  const BASE_URL = process.env.BASE_URL;
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("/api/login", {
+      const response = await axios.post(`${BASE_URL}/api/login`, {
         username,
         password,
       });
@@ -36,8 +45,7 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
         variant="h4"
         gutterBottom
         align="center"
-        fontFamily="Courgette, cursive"
-      >
+        fontFamily="Courgette, cursive">
         Login
       </Typography>
       <Grid container component="form" onSubmit={handleSubmit} spacing={2}>
@@ -69,7 +77,7 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={handleTogglePassword} edge="end">
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
                   </IconButton>
                 </InputAdornment>
               ),
@@ -81,8 +89,7 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
             type="submit"
             variant="contained"
             fullWidth
-            style={{ backgroundColor: backgroundColor, color: color }}
-          >
+            style={{ backgroundColor: backgroundColor, color: color }}>
             Login
           </Button>
         </Grid>
