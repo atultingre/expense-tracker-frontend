@@ -15,6 +15,7 @@ import LoginForm from "./components/Form/LoginForm";
 import SignupForm from "./components/Form/SignupForm";
 import Layout from "./components/Layout/Layout";
 import { BASE_URL } from "./api";
+import ResetPasswordForm from "./components/Form/ResetPasswordForm";
 
 const App = () => {
   const [filterDate, setFilterDate] = useState("");
@@ -49,7 +50,8 @@ const App = () => {
       fetchExpenses();
     } else if (
       location.pathname !== "/login" &&
-      location.pathname !== "/signup"
+      location.pathname !== "/signup" &&
+      location.pathname !== "/reset-password"
     ) {
       // If the user is not logged in and not on the login or signup page,
       // navigate to the login page
@@ -202,6 +204,15 @@ const App = () => {
               element={
                 <SignupForm
                   onSignup={handleSignup}
+                  backgroundColor={colorCombination.backgroundColor}
+                  color={colorCombination.color}
+                />
+              }
+            />
+            <Route
+              path="/reset-password"
+              element={
+                <ResetPasswordForm
                   backgroundColor={colorCombination.backgroundColor}
                   color={colorCombination.color}
                 />

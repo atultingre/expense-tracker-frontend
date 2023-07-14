@@ -11,28 +11,47 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { BASE_URL } from "../../api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.css";
 
-const LoginForm = ({ onLogin, backgroundColor, color }) => {
+const ResetPasswordForm = ({ backgroundColor, color }) => {
   const [email, setEmail] = useState("");
+  const [error, setError] = useState(null);
+  const [showPassword, setShowPassword] = useState(false);
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(null); // Define the 'error' variable
-  const [showPassword, setShowPassword] = useState(false); // Define the 'showPassword' variable
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(`${BASE_URL}/api/login`, {
+      // Send a request to the server to reset the password
+      await axios.post(`${BASE_URL}/api/reset-password`, {
         email,
         password,
+        confirmPassword,
       });
 
-      const token = response.data.token;
-      onLogin(token);
+      // Display success message using SweetAlert
+      Swal.fire({
+        icon: "success",
+        title: "Password Reset Successful",
+        text: "Your password has been reset successfully.",
+      });
+      navigate("/login");
+      // Optionally, redirect the user to another page or perform additional actions
     } catch (error) {
-      console.error("Error logging in:", error);
-      setError(error); // Update the 'error' value
+      console.error("Error resetting password:", error);
+      setError(error);
+
+      // Display error message using SweetAlert
+      Swal.fire({
+        icon: "error",
+        title: "Error Resetting Password",
+        text: "An error occurred while resetting your password.",
+      });
     }
   };
 
@@ -47,7 +66,7 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
         gutterBottom
         align="center"
         fontFamily="Courgette, cursive">
-        Login
+        Reset Password
       </Typography>
       <Grid container component="form" onSubmit={handleSubmit} spacing={2}>
         <Grid item xs={12}>
@@ -64,17 +83,38 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
         </Grid>
         <Grid item xs={12}>
           <TextField
-            label="Password"
-            type={showPassword ? "text" : "password"} // Toggle password visibility
+            label="New Password"
+            type={showPassword ? "text" : "password"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
             color={password.length <= 0 || error ? "error" : "success"}
             variant="outlined"
-            helperText={error ? "Invalid email or password" : null} // Show the error message as helper text
-            error={error !== null} // Set error prop to indicate an error
+            helperText={error ? "Invalid password" : null}
+            error={error !== null}
             InputProps={{
-              // Add the show/hide password toggle button
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleTogglePassword} edge="end">
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Grid>
+        <Grid item xs={12}>
+          <TextField
+            label="Confirm Password"
+            type={showPassword ? "text" : "password"}
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            fullWidth
+            color={confirmPassword.length <= 0 || error ? "error" : "success"}
+            variant="outlined"
+            helperText={error ? "Passwords do not match" : null}
+            error={error !== null}
+            InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
                   <IconButton onClick={handleTogglePassword} edge="end">
@@ -87,22 +127,11 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
         </Grid>
         <Grid item xs={12}>
           <Button
-            variant="text"
-            fullWidth
-            component={Link}
-            // onClick={handleForgotPassword}
-            to="/reset-password"
-            style={{ color: backgroundColor }}>
-            Forgot Password?
-          </Button>
-        </Grid>
-        <Grid item xs={12}>
-          <Button
             type="submit"
             variant="contained"
             fullWidth
-            style={{ backgroundColor: backgroundColor, color: color }}>
-            Login
+            style={{ backgroundColor, color }}>
+            Reset Password
           </Button>
         </Grid>
         <Grid item xs={12}>
@@ -110,9 +139,9 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
             variant="outlined"
             fullWidth
             component={Link}
-            to="/signup"
+            to="/login"
             style={{ color: backgroundColor }}>
-            Signup
+            Back to Login
           </Button>
         </Grid>
       </Grid>
@@ -120,4 +149,4 @@ const LoginForm = ({ onLogin, backgroundColor, color }) => {
   );
 };
 
-export default LoginForm;
+export default ResetPasswordForm;

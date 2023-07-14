@@ -12,9 +12,10 @@ import {
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { BASE_URL } from "../../api";
+import { Link } from "react-router-dom";
 
 const SignupForm = ({ onSignup, backgroundColor, color }) => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -23,7 +24,7 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
 
     try {
       await axios.post(`${BASE_URL}/api/register`, {
-        username,
+        email,
         password,
       });
 
@@ -40,7 +41,7 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
         Swal.fire({
           icon: "error",
           title: "Registration Error",
-          text: "Username already exists",
+          text: "email already exists",
         });
       } else {
         Swal.fire({
@@ -71,10 +72,10 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
             label="Username"
             type="text"
             placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
-            color={username.length <= 0 ? "error" : "success"}
+            color={email.length <= 0 ? "error" : "success"}
             fullWidth
           />
         </Grid>
@@ -106,6 +107,16 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
             style={{ backgroundColor: backgroundColor, color: color }}
             fullWidth>
             Signup
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            variant="outlined"
+            fullWidth
+            component={Link}
+            to="/login"
+            style={{ color: backgroundColor }}>
+            Login
           </Button>
         </Grid>
       </Grid>

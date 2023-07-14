@@ -16,60 +16,43 @@ const Navbar = ({
     setToken(null);
     navigate("/login");
   };
+  
 
   return (
-    <Grid container>
+    <Grid container xs={12}>
       <AppBar className="AppBar" position="static">
         <Toolbar style={{ backgroundColor: backgroundColor, color: color }}>
-          <Grid item xs={7}>
+          <Box gap={1} sx={{ mr: 2 }}>
             <Link
               className="logo"
               exact
               to="/"
-              onClick={() => setFilterDate("")}>
+              onClick={() => setFilterDate("")}
+            >
               SpendAnalyzer
             </Link>
-          </Grid>
-          <Grid item xs={5}>
-            {token ? (
-              <Box gap={1}>
-                <Button
-                  variant="outlined"
-                  className="addButton"
-                  style={{ color: "white", marginRight:'10px' }}>
-                  <Link exact to="/add" >
-                    Add Expense
-                  </Link>
-                </Button>
-                <Button
-                  variant="outlined"
-                  className="addButton"
-                  style={{ color: "white" }}
-                  onClick={handleLogout}>
-                  Logout
-                </Button>
-              </Box>
-            ) : (
-              <Box gap={1}>
-                <Button
-                  variant="outlined"
-                  className="addButton"
-                  style={{ color: "white" , marginRight:'10px'}}>
-                  <Link exact to="/login">
-                    Login
-                  </Link>
-                </Button>
-                <Button
-                  variant="outlined"
-                  className="addButton"
-                  style={{ color: "white" }}>
-                <Link exact to="/signup">
-                  Signup
+          </Box>
+          {token ? (
+            <Box gap={1}>
+              <Button
+                variant="outlined"
+                className="addButton"
+                style={{ color: "white", marginRight: "10px" }}
+              >
+                <Link exact to="/add">
+                  Add Expense
                 </Link>
-                </Button>
-              </Box>
-            )}
-          </Grid>
+              </Button>
+              <Button
+                variant="outlined"
+                className="addButton"
+                style={{ color: "white" }}
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </Box>
+          ) : null}
         </Toolbar>
       </AppBar>
     </Grid>
