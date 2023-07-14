@@ -44,6 +44,7 @@ const SignupForm = ({ onSignup, backgroundColor, color }) => {
         showConfirmButton: false,
         timer: 1500,
       });
+      navigate('/login')
     } catch (error) {
       console.error("Error registering user:", error);
       if (error.response && error.response.status === 400) {

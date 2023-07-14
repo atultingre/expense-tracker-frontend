@@ -23,7 +23,6 @@ const ResetPasswordForm = ({ backgroundColor, color }) => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -51,7 +50,6 @@ const ResetPasswordForm = ({ backgroundColor, color }) => {
       // Optionally, redirect the user to another page or perform additional actions
     } catch (error) {
       console.error("Error resetting password:", error);
-      setError(error);
 
       // Display error message using SweetAlert
       Swal.fire({
