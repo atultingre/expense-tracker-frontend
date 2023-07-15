@@ -1,7 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
+import { ColorContext } from "../../context/ColorContext/ColorContext";
 
-const Footer = ({backgroundColor,color}) => {
+const Footer = () => {
+  const colorCombination = useContext(ColorContext);
+  const { backgroundColor, color } = colorCombination;
+  
   const date = new Date().getFullYear();
   const [isVisible, setIsVisible] = useState(true);
 

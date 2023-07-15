@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import {
   Button,
@@ -12,8 +12,11 @@ import {
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { BASE_URL } from "../../api";
 import { Link } from "react-router-dom";
+import { ColorContext } from "../../context/ColorContext/ColorContext";
 
-const LoginForm = ({ onLogin, backgroundColor, color }) => {
+const LoginForm = ({ onLogin}) => {
+  const colorCombination = useContext(ColorContext);
+  const { backgroundColor, color } = colorCombination;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailError, setEmailError] = useState("");

@@ -1,17 +1,19 @@
 import moment from "moment";
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import CountUp from "react-countup";
+import { ColorContext } from "../../context/ColorContext/ColorContext";
 
 const ExpenseTable = ({
   sortedExpenses,
   numberWithCommas,
   deleteExpense,
   totalSpent,
-  backgroundColor, color
 }) => {
+  const colorCombination = useContext(ColorContext);
+  const { backgroundColor, color } = colorCombination;
   return (
     <div >
       <table className="w-full border border-gray-300 table mt-2"

@@ -6,8 +6,6 @@ const SummeryTable = ({
   monthSpent,
   yearSpent,
   totalSpent,
-  // numberWithCommas,
-backgroundColor, color
 }) => {
   return (
     <table className="w-full border border-gray-300 table1">

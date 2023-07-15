@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import {
@@ -9,13 +9,19 @@ import {
   Box,
   Grid,
 } from "@mui/material";
+import { ColorContext } from "../../context/ColorContext/ColorContext";
 
-const ExpenseForm = ({ addExpense, backgroundColor, color }) => {
+const ExpenseForm = ({ addExpense }) => {
+  const colorCombination = useContext(ColorContext);
+  const { backgroundColor, color } = colorCombination;
+
   const navigate = useNavigate();
 
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
+
+  
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -89,6 +95,7 @@ const ExpenseForm = ({ addExpense, backgroundColor, color }) => {
               type="button"
               onClick={handleCancel}
               variant="outlined"
+              style={{ color: backgroundColor }}
               fullWidth>
               Cancel
             </Button>

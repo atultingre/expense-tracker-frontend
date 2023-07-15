@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import axios from "axios";
 import {
   Button,
@@ -14,8 +14,11 @@ import { BASE_URL } from "../../api";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
+import { ColorContext } from "../../context/ColorContext/ColorContext";
 
-const SignupForm = ({ onSignup, backgroundColor, color }) => {
+const SignupForm = ({ onSignup}) => {
+  const colorCombination = useContext(ColorContext);
+  const { backgroundColor, color } = colorCombination;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);

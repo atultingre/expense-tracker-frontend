@@ -7,30 +7,22 @@ import ExpenseForm from "./components/Form/ExpenseForm";
 import ExpenseFormEdit from "./components/Form/ExpenseFormEdit";
 import "./index.css";
 import "./App.css";
-import Navbar from "./components/Navbar";
+import Navbar from "./components/Navbar/Navbar";
 import Footer from "./components/Footer/Footer";
-import { colorCombinations } from "./components/colorData";
 import axios from "axios";
 import LoginForm from "./components/Form/LoginForm";
 import SignupForm from "./components/Form/SignupForm";
 import Layout from "./components/Layout/Layout";
 import { BASE_URL } from "./api";
 import ResetPasswordForm from "./components/Form/ResetPasswordForm";
+import ColorContextProvider from "./context/ColorContext/ColorContext";
 
 const App = () => {
   const [filterDate, setFilterDate] = useState("");
-  const [colorCombination, setColorCombination] = useState({});
   const [expenses, setExpenses] = useState([]);
   const [token, setToken] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    // Generate a random index
-    const randomIndex = Math.floor(Math.random() * colorCombinations.length);
-    // Set the random color combination
-    setColorCombination(colorCombinations[randomIndex]);
-  }, []);
 
   useEffect(() => {
     const fetchExpenses = async () => {
@@ -177,97 +169,65 @@ const App = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
-      <Navbar
-        setFilterDate={setFilterDate}
-        expenses={expenses}
-        backgroundColor={colorCombination.backgroundColor}
-        color={colorCombination.color}
-        token={token}
-        setToken={setToken}
-      />
-      <Container component="main" sx={{ flexGrow: 1, mt: 4, mb: 2 }}>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route
-              path="/login"
-              element={
-                <LoginForm
-                  onLogin={handleLogin}
-                  backgroundColor={colorCombination.backgroundColor}
-                  color={colorCombination.color}
-                />
-              }
-            />
-            <Route
-              path="/signup"
-              element={
-                <SignupForm
-                  onSignup={handleSignup}
-                  backgroundColor={colorCombination.backgroundColor}
-                  color={colorCombination.color}
-                />
-              }
-            />
-            <Route
-              path="/reset-password"
-              element={
-                <ResetPasswordForm
-                  backgroundColor={colorCombination.backgroundColor}
-                  color={colorCombination.color}
-                />
-              }
-            />
-            {token && (
+    <ColorContextProvider>
+      <Box
+        sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+        <Navbar
+          setFilterDate={setFilterDate}
+          expenses={expenses}
+          token={token}
+          setToken={setToken}
+        />
+        <Container component="main" sx={{ flexGrow: 1, mt: 4, mb: 2 }}>
+          <Routes>
+            <Route path="/" element={<Layout />}>
               <Route
-                path="/add"
-                element={
-                  <ExpenseForm
-                    addExpense={addExpense}
-                    backgroundColor={colorCombination.backgroundColor}
-                    color={colorCombination.color}
-                  />
-                }
+                path="/login"
+                element={<LoginForm onLogin={handleLogin} />}
               />
-            )}
-            {token && (
               <Route
-                path="/"
-                exact
-                element={
-                  <ExpenseList
-                    expenses={expenses}
-                    updateExpense={updateExpense}
-                    deleteExpense={deleteExpense}
-                    filterDate={filterDate}
-                    setFilterDate={setFilterDate}
-                    backgroundColor={colorCombination.backgroundColor}
-                    color={colorCombination.color}
-                  />
-                }
+                path="/signup"
+                element={<SignupForm onSignup={handleSignup} />}
               />
-            )}
-            {token && (
-              <Route
-                path="/edit/:_id"
-                element={
-                  <ExpenseFormEdit
-                    expenses={expenses}
-                    updateExpense={updateExpense}
-                    backgroundColor={colorCombination.backgroundColor}
-                    color={colorCombination.color}
-                  />
-                }
-              />
-            )}
-          </Route>
-        </Routes>
-      </Container>
-      <Footer
-        backgroundColor={colorCombination.backgroundColor}
-        color={colorCombination.color}
-      />
-    </Box>
+              <Route path="/reset-password" element={<ResetPasswordForm />} />
+              {token && (
+                <Route
+                  path="/add"
+                  element={<ExpenseForm addExpense={addExpense} />}
+                />
+              )}
+              {token && (
+                <Route
+                  path="/"
+                  exact
+                  element={
+                    <ExpenseList
+                      expenses={expenses}
+                      updateExpense={updateExpense}
+                      deleteExpense={deleteExpense}
+                      filterDate={filterDate}
+                      setFilterDate={setFilterDate}
+                    />
+                  }
+                />
+              )}
+              {token && (
+                <Route
+                  path="/edit/:_id"
+                  element={
+                    <ExpenseFormEdit
+                      expenses={expenses}
+                      updateExpense={updateExpense}
+                    />
+                  }
+                />
+              )}
+            </Route>
+          </Routes>
+        </Container>
+        <Footer />
+      </Box>
+    </ColorContextProvider>
   );
 };
 

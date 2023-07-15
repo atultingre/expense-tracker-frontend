@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import moment from "moment";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -10,13 +10,14 @@ import {
   Box,
   Grid,
 } from "@mui/material";
+import { ColorContext } from "../../context/ColorContext/ColorContext";
 
 const ExpenseFormEdit = ({
   expenses,
   updateExpense,
-  backgroundColor,
-  color,
 }) => {
+  const colorCombination = useContext(ColorContext);
+  const { backgroundColor, color } = colorCombination;
   const { _id } = useParams();
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
