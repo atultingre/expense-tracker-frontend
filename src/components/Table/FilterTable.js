@@ -24,8 +24,8 @@ const FilterTable = ({
 
   return (
     <div className="w-full">
-      <Grid container spacing={2} sx={{ mb: 1, mt: 3 }}>
-        <Grid item xs={4}>
+      <Grid container rowGap={1} spacing={1} sx={{ mb: 1, mt: 3 }}>
+        <Grid item xs={12} sm={4}>
           <TextField
             type="month"
             label="Filter by month"
@@ -36,7 +36,7 @@ const FilterTable = ({
             fullWidth
           />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={4}>
           <FormControl fullWidth>
             <InputLabel id="Sort">Sort by</InputLabel>
             <Select
@@ -47,7 +47,8 @@ const FilterTable = ({
               label="Sort by"
               size="medium"
               color="warning"
-              fullWidth>
+              fullWidth
+            >
               <MenuItem value="">None</MenuItem>
               <MenuItem value="dateAsc">Date Ascending</MenuItem>
               <MenuItem value="dateDesc">Date Descending</MenuItem>
@@ -58,14 +59,15 @@ const FilterTable = ({
             </Select>
           </FormControl>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={4}>
           <Button
             variant="contained"
             size="large"
-            sx={{ p: 1.7, fontWeight: 600 }}
+            sx={{ p: 1.7, fontWeight: 600 , mb:2}}
             onClick={handleDownload}
             style={{ backgroundColor: backgroundColor, color: color }}
-            fullWidth>
+            fullWidth
+          >
             Excel <SimCardDownloadIcon />
           </Button>
         </Grid>
