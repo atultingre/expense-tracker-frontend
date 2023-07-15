@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { ColorContext } from "../../context/ColorContext/ColorContext";
 
+// 
 const ExpenseForm = ({ addExpense }) => {
   const colorCombination = useContext(ColorContext);
   const { backgroundColor, color } = colorCombination;
@@ -20,8 +21,6 @@ const ExpenseForm = ({ addExpense }) => {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
-
-  
 
   const handleSubmit = (e) => {
     e.preventDefault();

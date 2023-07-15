@@ -1,15 +1,30 @@
-import React, { useContext } from 'react'
-import { Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import React, { useContext } from "react";
+import {
+  Button,
+  FormControl,
+  Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+} from "@mui/material";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
-import { ColorContext } from '../../context/ColorContext/ColorContext';
+import { ColorContext } from "../../context/ColorContext/ColorContext";
 
-const FilterTable = ({filterDate, handleChange, sortType, handleSortChange, handleDownload, handleFilterChange}) => {
-  
+const FilterTable = ({
+  filterDate,
+  handleChange,
+  sortType,
+  handleSortChange,
+  handleDownload,
+  handleFilterChange,
+}) => {
   const colorCombination = useContext(ColorContext);
   const { backgroundColor, color } = colorCombination;
 
   return (
-    <Grid container spacing={2} sx={{ mb: 1, mt: 3 }}>
+    <div className="w-full">
+      <Grid container spacing={2} sx={{ mb: 1, mt: 3 }}>
         <Grid item xs={4}>
           <TextField
             type="month"
@@ -17,7 +32,7 @@ const FilterTable = ({filterDate, handleChange, sortType, handleSortChange, hand
             value={filterDate}
             onChange={handleFilterChange}
             size="medium"
-            color='warning'
+            color="warning"
             fullWidth
           />
         </Grid>
@@ -31,7 +46,7 @@ const FilterTable = ({filterDate, handleChange, sortType, handleSortChange, hand
               onChange={handleSortChange}
               label="Sort by"
               size="medium"
-              color='warning'
+              color="warning"
               fullWidth>
               <MenuItem value="">None</MenuItem>
               <MenuItem value="dateAsc">Date Ascending</MenuItem>
@@ -47,15 +62,16 @@ const FilterTable = ({filterDate, handleChange, sortType, handleSortChange, hand
           <Button
             variant="contained"
             size="large"
-            sx={{ p: 1.7 ,  fontWeight:600}}
+            sx={{ p: 1.7, fontWeight: 600 }}
             onClick={handleDownload}
-            style={{backgroundColor: backgroundColor, color:color}} 
+            style={{ backgroundColor: backgroundColor, color: color }}
             fullWidth>
             Excel <SimCardDownloadIcon />
           </Button>
         </Grid>
       </Grid>
-  )
-}
+    </div>
+  );
+};
 
-export default FilterTable
+export default FilterTable;

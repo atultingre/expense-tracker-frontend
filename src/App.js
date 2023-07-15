@@ -13,7 +13,7 @@ import axios from "axios";
 import LoginForm from "./components/Form/LoginForm";
 import SignupForm from "./components/Form/SignupForm";
 import Layout from "./components/Layout/Layout";
-import { BASE_URL } from "./api";
+import { BASE_URL } from "./components/Helper/api";
 import ResetPasswordForm from "./components/Form/ResetPasswordForm";
 import ColorContextProvider from "./context/ColorContext/ColorContext";
 
@@ -40,7 +40,8 @@ const App = () => {
 
     if (token) {
       fetchExpenses();
-    } else if (
+    } 
+    else if (
       location.pathname !== "/login" &&
       location.pathname !== "/signup" &&
       location.pathname !== "/reset-password"
@@ -51,7 +52,7 @@ const App = () => {
     }
   }, [token, navigate, location.pathname]);
 
-  // Add Expenses
+  // // Add Expenses
   const addExpense = async (expense) => {
     try {
       const response = await axios.post(

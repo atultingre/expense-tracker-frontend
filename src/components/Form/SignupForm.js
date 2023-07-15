@@ -10,13 +10,13 @@ import {
   Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { BASE_URL } from "../../api";
+import { BASE_URL } from "../Helper/api";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
 import { ColorContext } from "../../context/ColorContext/ColorContext";
 
-const SignupForm = ({ onSignup}) => {
+const SignupForm = ({ onSignup }) => {
   const colorCombination = useContext(ColorContext);
   const { backgroundColor, color } = colorCombination;
   const [email, setEmail] = useState("");
@@ -47,7 +47,7 @@ const SignupForm = ({ onSignup}) => {
         showConfirmButton: false,
         timer: 1500,
       });
-      navigate('/login')
+      navigate("/login");
     } catch (error) {
       console.error("Error registering user:", error);
       if (error.response && error.response.status === 400) {
@@ -108,8 +108,7 @@ const SignupForm = ({ onSignup}) => {
         variant="h4"
         gutterBottom
         align="center"
-        fontFamily="Courgette, cursive"
-      >
+        fontFamily="Courgette, cursive">
         Signup
       </Typography>
       <Grid container component="form" onSubmit={handleSubmit} spacing={2}>
@@ -153,8 +152,7 @@ const SignupForm = ({ onSignup}) => {
             type="submit"
             variant="contained"
             style={{ backgroundColor: backgroundColor, color: color }}
-            fullWidth
-          >
+            fullWidth>
             Signup
           </Button>
         </Grid>
@@ -164,8 +162,7 @@ const SignupForm = ({ onSignup}) => {
             fullWidth
             component={Link}
             to="/login"
-            style={{ color: backgroundColor }}
-          >
+            style={{ color: backgroundColor }}>
             Login
           </Button>
         </Grid>

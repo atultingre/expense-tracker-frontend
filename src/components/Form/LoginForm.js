@@ -10,11 +10,11 @@ import {
   Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { BASE_URL } from "../../api";
+import { BASE_URL } from "../Helper/api";
 import { Link } from "react-router-dom";
 import { ColorContext } from "../../context/ColorContext/ColorContext";
 
-const LoginForm = ({ onLogin}) => {
+const LoginForm = ({ onLogin }) => {
   const colorCombination = useContext(ColorContext);
   const { backgroundColor, color } = colorCombination;
   const [email, setEmail] = useState("");
@@ -81,8 +81,7 @@ const LoginForm = ({ onLogin}) => {
         variant="h4"
         gutterBottom
         align="center"
-        fontFamily="Courgette, cursive"
-      >
+        fontFamily="Courgette, cursive">
         Login
       </Typography>
       <Grid container component="form" onSubmit={handleSubmit} spacing={2}>
@@ -126,8 +125,7 @@ const LoginForm = ({ onLogin}) => {
             fullWidth
             component={Link}
             to="/reset-password"
-            style={{ color: backgroundColor }}
-          >
+            style={{ color: backgroundColor }}>
             Forgot Password?
           </Button>
         </Grid>
@@ -136,8 +134,7 @@ const LoginForm = ({ onLogin}) => {
             type="submit"
             variant="contained"
             fullWidth
-            style={{ backgroundColor, color }}
-          >
+            style={{ backgroundColor, color }}>
             Login
           </Button>
         </Grid>
@@ -147,8 +144,7 @@ const LoginForm = ({ onLogin}) => {
             fullWidth
             component={Link}
             to="/signup"
-            style={{ color: backgroundColor }}
-          >
+            style={{ color: backgroundColor }}>
             Signup
           </Button>
         </Grid>

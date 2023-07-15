@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { BASE_URL } from "../../api";
+import { BASE_URL } from "../Helper/api";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.css";
@@ -19,7 +19,7 @@ import { ColorContext } from "../../context/ColorContext/ColorContext";
 const ResetPasswordForm = () => {
   const colorCombination = useContext(ColorContext);
   const { backgroundColor, color } = colorCombination;
-  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -116,8 +116,7 @@ const ResetPasswordForm = () => {
         variant="h4"
         gutterBottom
         align="center"
-        fontFamily="Courgette, cursive"
-      >
+        fontFamily="Courgette, cursive">
         Reset Password
       </Typography>
       <Grid container component="form" onSubmit={handleSubmit} spacing={2}>
@@ -179,8 +178,7 @@ const ResetPasswordForm = () => {
             type="submit"
             variant="contained"
             fullWidth
-            style={{ backgroundColor, color }}
-          >
+            style={{ backgroundColor, color }}>
             Reset Password
           </Button>
         </Grid>
@@ -190,8 +188,7 @@ const ResetPasswordForm = () => {
             fullWidth
             component={Link}
             to="/login"
-            style={{ color: backgroundColor }}
-          >
+            style={{ color: backgroundColor }}>
             Back to Login
           </Button>
         </Grid>
